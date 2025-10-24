@@ -89,7 +89,7 @@ export const deleteTodo = async (req, res) => {
     }
 }
 
-export const getById = async(req, res) => {
+export const getById = async (req, res) => {
     try {
         const todoId = req.params.id
         const data = await todoSchema.findById({
@@ -106,6 +106,82 @@ export const getById = async(req, res) => {
         return res.status(400).json({
             success: false,
             message: "Todo not Fetched"
+        })
+
+    }
+}
+
+// export const todoUpdate = async (req, res) => {
+//     try {
+//         const newTitle = req.body
+//         const todoId = req.params.id
+
+//         if (todoId) {
+//             const data = await todoSchema.findByIdAndUpdate({
+//                 _id: todoId,
+//                 title: newTitle
+//             })
+
+
+//             return res.status(200).json({
+//                 success: true,
+//                 message: "Todo updated Successfully",
+//                 data
+//             })
+//         }
+
+
+
+//     } catch (error) {
+//         return res.status(400).json({
+//             success: false,
+//             message: "Todo not updated"
+//         })
+
+//     }
+// }
+
+
+export const todoUpdate = async (req, res) => {
+    try {
+        const { title} = req.body
+        const todoId = req.params.id
+
+        const data = await todoSchema.findById({
+            _id: todoId
+        })
+
+        if (!data) {
+            return res.status(404).json({
+                success: false,
+                message: "todo not found"
+            })
+        }
+
+        const existing = await todoSchema.findOne({
+            title: title
+        })
+
+        if (existing) {
+            return res.status(400).json({
+                success: false,
+                message: "todo already exist"
+            })
+        }
+
+        data.title = title
+        await data.save()
+
+        return res.status(200).json({
+            success: true,
+            message: "Todo updated Successfully",
+            data
+        })
+    }
+    catch (error) {
+        return res.status(400).json({
+            success: false,
+            message: "Todo not updated"
         })
 
     }
