@@ -1,5 +1,5 @@
 import express from "express"
-import { createTodo, getAllTodo } from "../controllers/todoController.js"
+import { createTodo, deleteTodo, getAllTodo, getById } from "../controllers/todoController.js"
 
 const todoRoute = express.Router()
 
@@ -9,6 +9,8 @@ const todoRoute = express.Router()
 
 todoRoute.post('/create', createTodo)
 todoRoute.get('/getAll', getAllTodo)
+todoRoute.delete('/delete/:id', deleteTodo)
+todoRoute.get('/getById/:id', getById)
 
 
 export default todoRoute
